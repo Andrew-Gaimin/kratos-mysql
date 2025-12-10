@@ -67,6 +67,7 @@ selfservice:
       lifespan: 10m
       ui_url: http://127.0.0.1:5173/registration
       after:
+        default_browser_return_url: http://127.0.0.1:5173/confirmation
         password:
           hooks:
             - hook: session
