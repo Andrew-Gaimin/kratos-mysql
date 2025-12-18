@@ -47,6 +47,12 @@ selfservice:
               - openid
               - profile
               - email
+          - id: apple
+            provider: apple
+            mapper_url: file:///etc/config/kratos/mappers/oidc.apple.jsonnet
+            scope:
+              - email
+              - name
 
   flows:
     error:
