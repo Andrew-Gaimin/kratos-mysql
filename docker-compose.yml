@@ -18,6 +18,33 @@ services:
       retries: 5
     networks:
       - intranet
+  
+  jackson:
+    image: boxyhq/jackson:latest
+    restart: always
+    environment:
+      - DB_ENGINE=sql
+      - DB_TYPE=mysql
+      - DB_URL=mysql://kratos:supersecret@db:3306/kratos
+      - EXTERNAL_URL=${EXTERNAL_URL}
+      - JACKSON_API_KEYS=secret-api-key-change-me
+      - NEXTAUTH_URL=${EXTERNAL_URL}
+      - NEXTAUTH_SECRET=super-secret-nextauth-secret
+      - NEXTAUTH_ADMIN_CREDENTIALS=admin@example.com:password123
+      - NODE_ENV=development
+      - OPENID_RSA_PRIVATE_KEY=${OPENID_PRIVATE_KEY}
+      - OPENID_RSA_PUBLIC_KEY=${OPENID_PUBLIC_KEY}
+      - SMTP_HOST=mailslurper
+      - SMTP_PORT=1025
+    ports:
+      - "5225:5225"
+    networks:
+      intranet:
+        aliases:
+          - jackson.127.0.0.1.nip.io
+    depends_on:
+      db:
+        condition: service_healthy
 
   kratos-migrate:
     image: oryd/kratos:v25.4.0
@@ -55,6 +82,8 @@ services:
     depends_on:
       kratos-migrate:
         condition: service_completed_successfully
+      jackson:
+        condition: service_started
     image: oryd/kratos:v25.4.0
     ports:
       - '4433:4433' # public
@@ -71,6 +100,12 @@ services:
       - SELFSERVICE_METHODS_OIDC_CONFIG_PROVIDERS_2_CLIENT_ID=${MICROSOFT_CLIENT_ID}
       - SELFSERVICE_METHODS_OIDC_CONFIG_PROVIDERS_2_CLIENT_SECRET=${MICROSOFT_CLIENT_SECRET}
       - SELFSERVICE_METHODS_OIDC_CONFIG_PROVIDERS_2_MICROSOFT_TENANT=${MICROSOFT_TENANT_ID}
+      - SELFSERVICE_METHODS_OIDC_CONFIG_PROVIDERS_3_ID=jackson
+      - SELFSERVICE_METHODS_OIDC_CONFIG_PROVIDERS_3_PROVIDER=generic
+      - SELFSERVICE_METHODS_OIDC_CONFIG_PROVIDERS_3_CLIENT_ID=${JACKSON_CLIENT_ID}
+      - SELFSERVICE_METHODS_OIDC_CONFIG_PROVIDERS_3_CLIENT_SECRET=${JACKSON_CLIENT_SECRET}
+      - SELFSERVICE_METHODS_OIDC_CONFIG_PROVIDERS_3_ISSUER_URL=${EXTERNAL_URL}
+      - SELFSERVICE_METHODS_OIDC_CONFIG_PROVIDERS_3_MAPPER_URL=file:///etc/config/kratos/mappers/oidc.jackson.jsonnet
     env_file:
       - .env
     volumes:
