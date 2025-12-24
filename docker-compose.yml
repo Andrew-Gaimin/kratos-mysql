@@ -39,9 +39,7 @@ services:
     ports:
       - "5225:5225"
     networks:
-      intranet:
-        aliases:
-          - jackson.127.0.0.1.nip.io
+      - intranet
     depends_on:
       db:
         condition: service_healthy
