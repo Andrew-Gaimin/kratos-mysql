@@ -13,7 +13,7 @@ serve:
     base_url: http://kratos:4434/
 
 selfservice:
-  default_browser_return_url: http://127.0.0.1:5173/ok
+  default_browser_return_url: http://127.0.0.1:5173/dashboard
   allowed_return_urls:
     - http://127.0.0.1:4455
     - http://127.0.0.1:5173
@@ -80,7 +80,7 @@ selfservice:
       ui_url: http://127.0.0.1:5173/verification
       use: code
       after:
-        default_browser_return_url: http://127.0.0.1:5173/ok
+        default_browser_return_url: http://127.0.0.1:5173/dashboard
 
     logout:
       after:
