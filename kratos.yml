@@ -42,6 +42,7 @@ selfservice:
           #     in this configuration, starting with 0
           - id: google
             provider: google
+            label: Google
             mapper_url: file:///etc/config/kratos/mappers/oidc.google.jsonnet
             scope:
               - openid
@@ -49,17 +50,22 @@ selfservice:
               - email
           - id: apple
             provider: apple
+            label: Apple
             mapper_url: file:///etc/config/kratos/mappers/oidc.apple.jsonnet
             scope:
               - email
               - name
           - id: microsoft
             provider: microsoft
+            label: Microsoft
             mapper_url: file:///etc/config/kratos/mappers/oidc.microsoft.jsonnet
             scope:
               - openid
               - profile
               - email
+          - id: jackson-sso  
+            provider: jackson  
+            label: SSO
 
   flows:
     error:
